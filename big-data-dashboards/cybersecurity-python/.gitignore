@@ -1,0 +1,18 @@
+# Python environment & cache
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.venv/
+env/
+venv/
+*.log
+
+# Large datasets (do not commit multi-gigabyte PCAP/CSVs)
+data/*.pcap
+data/*.csv
+!data/synthetic_ids_sample.csv
+!data/README.md
+
+# Streamlit config & secrets
+.streamlit/secrets.toml
