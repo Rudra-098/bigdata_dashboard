@@ -182,3 +182,16 @@ def test_detect_normal_label():
     assert detect_normal_label(s1) == "BENIGN"
     assert detect_normal_label(s2) == "Normal"
     assert detect_normal_label(s3) is None
+
+
+def test_data_cleaning_duplicate_columns():
+    """Verify duplicate column names (even after whitespace stripping) are disambiguated."""
+    df = pd.DataFrame(
+        [[10, 20, "BENIGN"]],
+        columns=["Flow Packets/s", " Flow Packets/s", "Label"]
+    )
+    cleaned_df, report = clean_dataset(df)
+    assert "Flow Packets/s" in cleaned_df.columns
+    assert "Flow Packets/s_1" in cleaned_df.columns
+    assert len(cleaned_df.columns) == 3
+

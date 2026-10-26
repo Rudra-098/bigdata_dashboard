@@ -87,9 +87,20 @@ def clean_dataset(
     )
     df_clean = df.copy()
 
-    # 1. Trim leading and trailing whitespace from column names
-    col_mapping = {c: str(c).strip() for c in df_clean.columns}
-    df_clean.rename(columns=col_mapping, inplace=True)
+    # 1. Trim leading/trailing whitespace and ensure unique column names
+    clean_cols = []
+    seen_cols = {}
+    for c in df_clean.columns:
+        norm = str(c).strip()
+        if norm in seen_cols:
+            seen_cols[norm] += 1
+            unique_name = f"{norm}_{seen_cols[norm]}"
+            clean_cols.append(unique_name)
+            report.warnings.append(f"Disambiguated duplicate column '{norm}' to '{unique_name}'.")
+        else:
+            seen_cols[norm] = 0
+            clean_cols.append(norm)
+    df_clean.columns = clean_cols
     report.cleaned_col_count = len(df_clean.columns)
 
     # 2. Trim whitespace in string columns
